@@ -1,19 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground,Dimensions } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-
+import { signup } from '../../redux/modules/auth/authReducer';
+import { useDispatch } from 'react-redux';
 const window_height = Dimensions.get('screen').height;
 const Signup = () => {
     const navigation = useNavigation()
+    const dispatch = useDispatch()
+    const [username, setUsername] = useState()
+    const [email,setEmail] = useState();
+    const [password,setPassword] = useState()
+    const [phone,setPhone] = useState();
+    const [address,setAddress] = useState();
+
+    const moveToLogin=()=>{
+      let payload ={
+        name: username,
+        phone: phone,
+        email: email,
+        password:  password,
+        address: address
+      }
+      dispatch(signup(payload)).then((res)=>{
+        console.log('response', res)
+        navigation.navigate('Home')
+      })
+
+    }
   return (
     <View style={styles.parentContainer}>
     <ImageBackground
       source={require('../../../assets/bgImage.png')} // Replace with your background image URL
-      style={styles.background}
-    >
+      style={styles.background}>
         <Text style={styles.title}>JJ</Text>
         <Text style={styles.title}>CONSTRUCTIONS</Text>
-
         <Text style={styles.subtitle}>ONE STOP SOLUTION FOR ALL YOUR CONSTRUCTION NEEDS</Text>
         </ImageBackground>
       <View style={styles.container}>
@@ -24,31 +44,41 @@ const Signup = () => {
           style={styles.input}
           placeholder="Enter Name"
           placeholderTextColor="#000"
-          keyboardType="phone-pad"
+          onChangeText={text => setUsername(text)}
+        />
+         <TextInput
+          style={styles.input}
+          placeholder="Enter Email"
+          placeholderTextColor="#000"
+          onChangeText={text=> setEmail(text)}
         />
 
         <TextInput
           style={styles.input}
           placeholder="Enter PhoneNumber"
           placeholderTextColor="#000"
-          secureTextEntry
+          keyboardType="phone-pad"
+          onChangeText={text=> setPhone(text)}
         />
          <TextInput
           style={styles.input}
           placeholder="Password"
           placeholderTextColor="#000"
-          keyboardType="phone-pad"
+          secureTextEntry
+          onChangeText={text=> setPassword(text)}
         />
 
+      {/* May be dropdown of Areas */}
         <TextInput
           style={styles.input}
           placeholder="Address"
           placeholderTextColor="#000"
+          onChangeText={text => setAddress(text)}
         />
 
 
     <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.loginButton} onPress={()=>navigation.navigate('Home')}>
+        <TouchableOpacity style={styles.loginButton} onPress={()=>moveToLogin()}>
           <Text style={styles.loginButtonText}>SIGNUP</Text>
         </TouchableOpacity>
 
@@ -67,7 +97,7 @@ const styles = StyleSheet.create({
         
     },
   background: {
-    flex: 0.6,
+    flex: 0.45,
     width: '100%',
     height: window_height/2.7,
     justifyContent: 'center',
@@ -80,7 +110,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderTopLeftRadius:20,
     flex:1,
-    paddingTop:50
+    paddingTop:30
   },
   title: {
     fontSize: 26,
