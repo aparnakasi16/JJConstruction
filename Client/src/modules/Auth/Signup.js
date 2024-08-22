@@ -3,6 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground,Di
 import {useNavigation} from '@react-navigation/native';
 import { signup } from '../../redux/modules/auth/authReducer';
 import { useDispatch } from 'react-redux';
+import Toast from 'react-native-simple-toast'
+
 const window_height = Dimensions.get('screen').height;
 const Signup = () => {
     const navigation = useNavigation()
@@ -23,9 +25,14 @@ const Signup = () => {
       }
       dispatch(signup(payload)).then((res)=>{
         console.log('response', res)
-        navigation.navigate('Home')
+        if(res?.payload?.isAuthenticated){
+          Toast.show('Signup Successful',Toast.LONG)
+          navigation.navigate('Home')
+        }
+        else{
+          Toast.show(res?.payload?.error,Toast.LONG)
+        }
       })
-
     }
   return (
     <View style={styles.parentContainer}>

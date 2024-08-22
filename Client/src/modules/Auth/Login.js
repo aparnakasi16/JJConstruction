@@ -1,10 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground,Dimensions } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-
+import { useDispatch } from 'react-redux';
+import { login } from '../../redux/modules/auth/authReducer';
+import Toast from 'react-native-simple-toast'
 const window_height = Dimensions.get('screen').height;
 const LoginScreen = () => {
   const navigation=useNavigation()
+  const dispatch = useDispatch()
+  const [phone, setPhone] = useState();
+  const [password, setPassword] = useState();
+
+  const goToLogin =()=>{
+    let payload ={
+      'phone':phone,
+      'password':password
+    }
+    dispatch(login(payload)).then((res)=>{
+      if(res?.payload?.isAuthenticated){
+        navigation.navigate('Home')
+      }
+      else{
+        Toast.show(res?.payload?.error,Toast.LONG)
+      }
+    })
+  }
+
   return (
     <View style={styles.parentContainer}>
     <ImageBackground
@@ -25,6 +46,7 @@ const LoginScreen = () => {
           placeholder="Enter Phone Number"
           placeholderTextColor="#000"
           keyboardType="phone-pad"
+          onChangeText={text => setPhone(text)}
         />
 
         <TextInput
@@ -32,6 +54,7 @@ const LoginScreen = () => {
           placeholder="Password"
           placeholderTextColor="#000"
           secureTextEntry
+          onChangeText={text =>setPassword(text)}
         />
         <Text style={[styles.subtitle,{color:'#fff'}]}>OR</Text>
 
@@ -41,7 +64,7 @@ const LoginScreen = () => {
         </TouchableOpacity>
 
     <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.loginButton} onPress={()=>navigation.navigate('Home')}>
+        <TouchableOpacity style={styles.loginButton} onPress={()=>goToLogin()}>
           <Text style={styles.loginButtonText}>LOGIN</Text>
         </TouchableOpacity>
 

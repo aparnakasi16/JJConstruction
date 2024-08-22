@@ -23,7 +23,6 @@ const HomeScreen = () => {
       },
     // Add more projects as needed
   ];
-
   const renderProjectItem = ({item}) => (
     console.log('item', item),
     (
