@@ -6,6 +6,14 @@ const projectSchema = new Schema({
       type: Number,
       required: true,
     },
+    buildupArea:{
+      type: Number,
+      required: true,
+    },
+    landArea:{
+      type: Number,
+      required: true,
+    },
     description: {
       type: String,
       required: true,
@@ -22,11 +30,14 @@ const projectSchema = new Schema({
       type: String, // You can store image URLs as strings
       required: false, // Not required if images are optional
     },
-    createdAt: {
-      type: Date,
-      default: Date.now,
+    propertyPossession:{
+      type: String,
+      required: false,
     },
-  });
+
+   
+  },
+  { timestamps: true });
   
 // export default mongoose.model("User", userSchema);
 module.exports = mongoose.model('Projects', projectSchema)

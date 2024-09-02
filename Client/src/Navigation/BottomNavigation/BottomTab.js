@@ -7,6 +7,8 @@ import HomeScreen from '../../modules/Home/Home';
 // import ServicesScreen from './services';
 // import ProfileScreen from './profile';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import NewConstruction from '../../modules/NewEnquiry/NewConstruction';
+import Services from '../../modules/Services/Services';
 
 const Tab = createBottomTabNavigator();
 
@@ -81,9 +83,9 @@ export default function BottomTab() {
       <Tab.Navigator tabBar={props => <CustomTabBar {...props} />}>
         <Tab.Screen name="Home" component={HomeScreen}  options={{
             headerShown: false,}}/>
-        <Tab.Screen name="NewConstruction" component={HomeScreen} options={{
+        <Tab.Screen name="NewConstruction" component={NewConstruction} options={{
             headerShown: false,}}/>
-        <Tab.Screen name="Services" component={HomeScreen} options={{
+        <Tab.Screen name="Services" component={Services} options={{
             headerShown: false,}}/>
         <Tab.Screen name="Profile" component={HomeScreen} options={{
             headerShown: false,}}/>
