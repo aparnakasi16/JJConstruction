@@ -25,6 +25,27 @@ const enquirySchema = new Schema({
       type: String,
       required: true,
     },
+    username: {
+      type: String,
+      required: true,
+    },
+    phone:{
+      type: String,
+      required: true,
+    },
+    userId:{
+      type: Number,
+      required: true,
+    },
+    status:{
+      type: String,
+      default: 'Open',
+    },
+    enquiryId:{
+      type: Number,
+      default: 0,
+    }
+    // updatedAt: {
     // createdAt: {
     //   type: Date,
     //   default: Date.now,

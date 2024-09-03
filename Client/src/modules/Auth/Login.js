@@ -12,20 +12,20 @@ const LoginScreen = () => {
   const [password, setPassword] = useState();
 
   const goToLogin =()=>{
-    navigation.navigate('Home')
+    // navigation.navigate('Home')
 
-    // let payload ={
-    //   'phone':phone,
-    //   'password':password
-    // }
-    // dispatch(login(payload)).then((res)=>{
-    //   if(res?.payload?.isAuthenticated){
-    //     navigation.navigate('Home')
-    //   }
-    //   else{
-    //     Toast.show(res?.payload?.error,Toast.LONG)
-    //   }
-    // })
+    let payload ={
+      'phone':phone,
+      'password':password
+    }
+    dispatch(login(payload)).then((res)=>{
+      if(res?.payload?.isAuthenticated){
+        navigation.navigate('Home')
+      }
+      else{
+        Toast.show(res?.payload?.error,Toast.LONG)
+      }
+    })
   }
 
   return (

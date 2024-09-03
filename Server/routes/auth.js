@@ -2,11 +2,20 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const Model = require('../models/user');
+const Counter = require('../models/counter');
 const hashPassword = require('../helpers/auth')
 const bcrypt = require('bcrypt')
 // controllers
 // const {signup, signin, forgotPassword, resetPassword} = require('../controllers/auth')
 
+const getNextSequenceValue = async (sequenceName) => {
+  const counter = await Counter.findOneAndUpdate(
+    { _id: sequenceName },
+    { $inc: { sequence_value: 1 } },
+    { new: true, upsert: true } // upsert creates the counter if it doesn't exist
+  );
+  return counter.sequence_value;
+};
 router.get('/', (req, res) => {
   return res.json({
     data: 'hello world from the API',
@@ -35,9 +44,10 @@ router.post('/signup', async (req, res) => {
     // Hash the password
     const saltRounds = 10; // Number of salt rounds
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-
+    const userId = await getNextSequenceValue('userid');
     // Create a new user instance with the hashed password
     const newUser = new Model({
+      userId: userId,
       name: name,
       phone: phone,
       email: email,
@@ -53,10 +63,10 @@ router.post('/signup', async (req, res) => {
       expiresIn: '7d',
     });
 
-    const { ...rest } = savedUser._doc;
+    const { password: _, ...userDetails } = savedUser._doc; // Exclude password from response
     return res.json({
       token,
-      user: rest,
+      user: userDetails,
       isAuthenticated: true
     });
   } catch (err) {
@@ -93,7 +103,7 @@ router.post('/login', async (req, res) => {
       expiresIn: '7d',
     });
 
-    const { ...rest } = user._doc;
+    const { password: _,...rest } = user._doc;
     return res.json({
       token,
       user: rest,

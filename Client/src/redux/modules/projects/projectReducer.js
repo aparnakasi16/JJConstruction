@@ -27,6 +27,33 @@ export const newEnquiry = createAsyncThunk(
     },
   );
 
+  export const getUserEnquiry = createAsyncThunk(
+    'enquiries/getEnquiry',
+    async (payload, thunkAPI) => {
+      let response;
+      try {
+        let url;
+        thunkAPI.dispatch(updateIsLoading(true));
+        url = `http://localhost:8000/api/enquiries/${payload?.userId}`;
+        response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: '*/*',
+            // Authorization: `Bearer ${payload.token}`,
+          },
+        });
+        const json = await response.json();
+        // console.log('timelinessssss', json)
+        thunkAPI.dispatch(updateIsLoading(false));
+        return json;
+      } catch (error) {
+        console.error(error);
+        thunkAPI.dispatch(updateIsLoading(false));
+      }
+    },
+  );
+
   export const projectSlice = createSlice({
     name: 'projects',
     initialState,

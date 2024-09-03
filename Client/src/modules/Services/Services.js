@@ -11,8 +11,9 @@ import {CheckBox} from '@rneui/themed';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
 import Toast from 'react-native-simple-toast'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { newEnquiry } from '../../redux/modules/projects/projectReducer';
+import { useNavigation } from '@react-navigation/native';
 
 // Roofing installation
 // Exterior and interior wall construction
@@ -21,6 +22,7 @@ import { newEnquiry } from '../../redux/modules/projects/projectReducer';
 
 function Services(props) {
   const dispatch = useDispatch()
+  const navigation = useNavigation()
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
   const [services, setServices] = useState();
@@ -30,6 +32,7 @@ function Services(props) {
   const [warrantyCheck, setWarrantyCheck] = useState(true);
   const [warrantyUnCheck, setWarrantyUnCheck] = useState(false);
   const [handOveryear, setHandOveryear] = useState();
+  const userDetails = useSelector(state=>state.auth.userDetails)
   const [visitDate, setVisitDate] = useState(
     new Date(Date.now() + 2 * (60 * 60 * 1000)),
   );
@@ -87,10 +90,17 @@ function Services(props) {
         'underWarranty':warrantyCheck ? true : false,
         'handOverYear': handOveryear,
         'visitDate': moment(visitDate),
+        'username':userDetails?.name,
+        'phone':userDetails?.phone,
+        'userId':userDetails?.userId
     }
     console.log('payload here', payload)
     dispatch(newEnquiry(payload)).then((res)=>{
         console.log('response enquiryy', res?.payload)
+        if(res?.payload?.success){
+          Toast.show('Enquiry created successfully',Toast.LONG)
+          navigation.navigate('Home')         
+        }
     })
     }
   };

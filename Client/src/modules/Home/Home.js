@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,12 @@ import {
   ScrollView,
 } from 'react-native';
 import projectImg1 from '../../../assets/Img3.png';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from 'react-redux';
 const HomeScreen = () => {
+  const [userData, setUserData] = useState()
+  const userDetails = useSelector(state =>state.auth.userDetails)
+  console.log('userDetails', userDetails)
   const projects = [
     {
       id: '1',
@@ -23,8 +28,19 @@ const HomeScreen = () => {
       },
     // Add more projects as needed
   ];
+
+  useEffect(()=>{
+    getUserData()
+  },[])
+
+  const getUserData =async()=>{
+    await AsyncStorage.getItem('userData').then(res => {
+      data = JSON.parse(res);
+      setUserData(data);
+    });
+  }
+
   const renderProjectItem = ({item}) => (
-    console.log('item', item),
     (
       <View style={styles.projectItem}>
         <Image
@@ -39,7 +55,7 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.greeting}>Hello Seshan,</Text>
+        <Text style={styles.greeting}>Hello {userData?.name},</Text>
         <Text style={styles.subGreeting}>
           We offer a one step solution for all your construction needs
         </Text>
